@@ -15,8 +15,20 @@ ActiveRecord::Schema.define(version: 20131028185947) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "elephants", force: true do |t|
-    t.string "name"
+  create_table "friends", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "friend_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "users", force: true do |t|
+    t.string   "name"
+    t.string   "email"
+    t.string   "password_digest"
+    t.integer  "friends_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end
