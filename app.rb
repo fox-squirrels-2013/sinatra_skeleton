@@ -54,7 +54,16 @@ get '/:page_id' do
   end
 end
 
-post '/:page_id' do
+get '/:page_id/new' do
+  @feed_owner = User.find(params[:page_id])
+  if @feed_owner.email == session[:email]
+    erb :new_post
+  else
+    "Sorry, only the owner of this feed can post here."
+  end
+end
+
+post '/:page_id/new' do
   # add something to authenticate that user is owner in order to post
   Post.create(:title => params[:title], :body => params[:body],
            :user_id => params[:page_id])

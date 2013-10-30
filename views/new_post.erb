@@ -1,0 +1,15 @@
+<%= "Welcome, #{session[:email]}!" %>
+
+<form id="post_feed" action="/:page_id" method="post">
+  <fieldset>
+  <label>Title</label>
+  <br/>
+  <input name="title" type="text"/><br/>
+  <label>Body</label>
+  <br/>
+  <textarea cols="70" rows="5" name="body">
+  </textarea>
+  <br/>
+  <input type="submit" value="Create Post"/>
+  </fieldset>
+</form>
