@@ -22,8 +22,6 @@ post '/' do
   curr_user = User.find_by email: params[:email]
   if !curr_user || curr_user.password != params[:password]
     erb :login_failed
-  elsif curr_user.password != params[:password]
-    erb :login_failed
   else
     session[:email] = params[:email]
     erb :sign_in
@@ -43,13 +41,17 @@ get '/logout' do
   session.clear
   redirect '/'
 end
+
 get '/:page_id' do
-  @feed_owner = User.find(params[:page_id])
-  halt 404 unless @feed_owner
-  # ideally make this page display form and content if and only 
-  # if owner is logged in, otherwise display content only. May
-  # need to accomplish this using two separate views.
-  erb :user_feed
+  unless User.find_all_by_id(params[:page_id]).first
+    "No user exists with that ID!"
+  else
+    @feed_owner = User.find(params[:page_id])
+    # ideally make this page display form and content if and only 
+    # if owner is logged in, otherwise display content only. May
+    # need to accomplish this using two separate views.
+    erb :user_feed
+  end
 end
 
 post '/:page_id' do
