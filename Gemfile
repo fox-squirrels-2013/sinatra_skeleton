@@ -3,4 +3,4 @@ ruby "2.0.0"
 gem 'sinatra'
 gem 'pg'
 gem 'sinatra-activerecord'
-# require 'shotgun'
+gem 'shotgun'
