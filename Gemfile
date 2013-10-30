@@ -3,4 +3,7 @@ ruby "2.0.0"
 gem 'sinatra'
 gem 'pg'
 gem 'sinatra-activerecord'
-require 'shotgun'
+
+group :development do
+  gem 'shotgun'	
+end
