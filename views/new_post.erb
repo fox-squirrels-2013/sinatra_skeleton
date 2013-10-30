@@ -1,6 +1,6 @@
 <%= "Welcome, #{session[:email]}!" %>
 
-<form id="post_feed" action="/:page_id" method="post">
+<form id="post_feed" action="/<%= params[:page_id] %>" method="post">
   <fieldset>
   <label>Title</label>
   <br/>

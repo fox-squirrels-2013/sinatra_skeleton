@@ -1,5 +1,15 @@
-<%= "You are now visiting #{@feed_owner.email}'s feed." %>
+<%= "You are now visiting #{@feed_owner.email}'s feed." %>  To create a new post, click <a href="/<%= "#{params[:page_id]}" %>/new">here</a>.
+<br/>
+<br/>
+<% Post.find_each do |post| %>
+  <% if post.user_id == @feed_owner.id %>
+    <b><%= post.title %></b>
+    <br/>
+    <i><%= "Created at #{post.created_at}" %></i>
+    <br/>
+    <%= post.body %>
+    <br/>
+    <br/>
+  <% end %>
+<% end %>
 
-<p>Posts will be displayed here.</p>
-
-<p>To create a new post, click <a href="/<%= "#{params[:page_id]}" %>/new">here</a>.</p>
