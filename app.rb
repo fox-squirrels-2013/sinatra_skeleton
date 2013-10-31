@@ -43,6 +43,19 @@ get '/logout' do
   redirect '/'
 end
 
+get '/search' do
+  erb :search
+end
+
+post '/search' do
+  found_user = User.find_by email: params[:email]
+  if found_user
+    redirect '/' + found_user.id.to_s
+  else
+    erb :search_failed
+  end
+end
+
 get '/:page_id' do
   if !session[:email]
     erb :must_log_in
