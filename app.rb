@@ -72,7 +72,7 @@ get '/:page_id' do
 end
 
 post '/:page_id' do
-  @feed_owner = User.find(params[:page_id])
+  @feed_owner = User.find_by id: params[:page_id]
   Post.create(:title => params[:title], :body => params[:body],
               :user_id => @feed_owner.id)
   erb :user_feed
