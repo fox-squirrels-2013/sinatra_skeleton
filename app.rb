@@ -3,6 +3,7 @@ require 'active_record'
 require 'sinatra/flash'
 require_relative './app/models/user'
 require_relative './app/models/post'
+require_relative './app/models/friend'
 
 ActiveRecord::Base.establish_connection(adapter: 'postgresql',
                                         database: 'social_network')
@@ -35,7 +36,7 @@ get '/sign_up' do
 end
 
 post '/sign_up' do
-  User.create(:email => params[:email], :password => params[:password])
+  User.create(:email => params[:email], :password => params[:password], :name => params[:name])
   erb :confirm_new_user
 end
 

@@ -1,6 +1,18 @@
 <%= "You are now visiting #{@feed_owner.email}'s feed." %>  To create a new post, click <a href="/<%= "#{params[:page_id]}" %>/new">here</a>.
 <br/>
 <br/>
+<%= "#{@feed_owner.email}" %> is friends with:
+<br /><br />
+
+<% Friend.all.each do |friend| %>
+ <%= User.find(friend.id).email %><br />
+<% end %>
+<br />
+<br />
+
+
+
+
 <% users_posts = [] %>
 <% Post.find_each do |post| %>
   <% if post.user_id == @feed_owner.id %>
