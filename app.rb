@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'active_record'
+require 'sinatra/flash'
 require_relative './app/models/user'
 require_relative './app/models/post'
 
@@ -52,7 +53,8 @@ post '/search' do
   if found_user
     redirect '/' + found_user.id.to_s
   else
-    erb :search_failed
+    flash[:notice] = "Sorry, we don't have any users with that email address."
+    redirect '/search'
   end
 end
 
