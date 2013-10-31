@@ -57,13 +57,13 @@ post '/search' do
 end
 
 get '/:page_id' do
+  @feed_owner = User.find_by id: params[:page_id]
   if !session[:email]
     erb :must_log_in
   else
-    unless User.find_all_by_id(params[:page_id]).first
+    unless @feed_owner
       "No user exists with that ID!"
     else
-      @feed_owner = User.find(params[:page_id])
       erb :user_feed
     end
   end
@@ -77,7 +77,7 @@ post '/:page_id' do
 end
 
 get '/:page_id/new' do
-  @feed_owner = User.find(params[:page_id])
+  @feed_owner = User.find_by id: params[:page_id]
   if @feed_owner.email == session[:email]
     erb :new_post
   else
