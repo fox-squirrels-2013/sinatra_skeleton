@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'active_record'
 require_relative './app/models/user'
+require_relative './app/models/post'
 
 ActiveRecord::Base.establish_connection(adapter: 'postgresql',
                                         database: 'social_network')
@@ -43,20 +44,30 @@ get '/logout' do
 end
 
 get '/:page_id' do
-  unless User.find_all_by_id(params[:page_id]).first
-    "No user exists with that ID!"
+  if !session[:email]
+    erb :must_log_in
   else
-    @feed_owner = User.find(params[:page_id])
-    # ideally make this page display form and content if and only 
-    # if owner is logged in, otherwise display content only. May
-    # need to accomplish this using two separate views.
-    erb :user_feed
+    unless User.find_all_by_id(params[:page_id]).first
+      "No user exists with that ID!"
+    else
+      @feed_owner = User.find(params[:page_id])
+      erb :user_feed
+    end
   end
 end
 
 post '/:page_id' do
-  # add something to authenticate that user is owner in order to post
+  @feed_owner = User.find(params[:page_id])
   Post.create(:title => params[:title], :body => params[:body],
-           :user_id => params[:page_id])
+              :user_id => @feed_owner.id)
   erb :user_feed
+end
+
+get '/:page_id/new' do
+  @feed_owner = User.find(params[:page_id])
+  if @feed_owner.email == session[:email]
+    erb :new_post
+  else
+    "Sorry, only the owner of this feed can post here."
+  end
 end
