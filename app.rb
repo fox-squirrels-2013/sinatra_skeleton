@@ -60,6 +60,7 @@ post '/search' do
 end
 
 get '/:page_id' do
+  @session_user_id = session[:id]
   @feed_owner = User.find_by id: params[:page_id]
   if !session[:email]
     erb :must_log_in

@@ -19,13 +19,13 @@ end
 
 # p Friend.all.first
 
-@feed_owner = Friend.all.find(1)
+@feed_owner = User.all.find(6)
 
 Friend.all.each do |friend|
   if friend.user_id == @feed_owner.id
-    friend.email
+    p User.find(friend.friend_id).name
   end
 end
 
 
-User.find(Friend.all.first.friend_id).email
+p User.find(Friend.all.first.friend_id).email
