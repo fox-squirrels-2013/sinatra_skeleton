@@ -19,7 +19,11 @@ helpers do
 end
 
 get '/' do
+  if session[:email] != nil
+    erb :user_cp
+  else
   erb :index, :locals => { :session => session }
+end
 end
 
 post '/' do
@@ -28,7 +32,7 @@ post '/' do
     erb :login_failed
   else
     session[:email] = params[:email]
-    erb :sign_in
+    erb :user_cp
   end
 end
 
@@ -51,10 +55,10 @@ post '/friend_requests' do
       Friend.create user_id: params[:user_id], friend_id: params[:friend_id]
       # Delete the friend request and any duplicate requests.
       FriendRequest.where(request_id: params[:friend_id]).destroy_all
-      redirect 'friend_requests'
+      redirect '/'
     elsif params[:action] == "reject"
       FriendRequest.find_by_request_id(params[:friend_id]).destroy
-      redirect 'friend_requests'
+      redirect '/'
   end
 end
 
@@ -77,7 +81,7 @@ get '/search' do
   erb :search
 end
 
-post '/search' do
+get '/search/query' do
   found_user = User.find_by email: params[:email]
   if found_user
     redirect '/' + found_user.id.to_s
@@ -114,4 +118,10 @@ get '/:page_id/new' do
   else
     "Sorry, only the owner of this feed can post here."
   end
+end
+
+
+get '/user_cp' do
+  @current_user = User.find_by email: session[:email]
+  erb :user_cp
 end

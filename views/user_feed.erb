@@ -3,8 +3,6 @@
 <br/>
 
 
-
-
 <% if (Friend.is_friend?(@feed_owner.id, User.all.find_by_email(session[:email]).id)) || @feed_owner.id == User.all.find_by_email(session[:email]).id %> 
 
   <%= "#{@feed_owner.name}" %> is friends with:
