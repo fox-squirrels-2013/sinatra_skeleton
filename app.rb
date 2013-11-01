@@ -7,7 +7,7 @@ require_relative './app/models/friend'
 require_relative './app/models/friend_request'
 
 ActiveRecord::Base.establish_connection(adapter: 'postgresql',
-                                        database: 'social_network')
+  database: 'social_network')
 
 set :session_secret, ENV["SESSION_KEY"] || 'too secret'
 
@@ -37,30 +37,25 @@ get '/friend_requests' do
 end
 
 post '/friend_requests' do
-  # Deletes existing duplicate friend requests
-  if FriendRequest.find_by_user_id_and_request_id(User.find_by_email(session[:email]).id, params[:friend_id]) != nil
-    FriendRequest.find_by_user_id_and_request_id(User.find_by_email(session[:email]).id, params[:friend_id]).destroy
+  # If user is sending a request...
+  if params[:action] == "send" 
+    # Deletes existing duplicate friend requests
+    if FriendRequest.find_by_user_id_and_request_id(User.find_by_email(session[:email]).id, params[:friend_id]) != nil
+      FriendRequest.find_by_user_id_and_request_id(User.find_by_email(session[:email]).id, params[:friend_id]).destroy
+    end
+    # Creates friend request.
+    FriendRequest.create user_id: User.find_by_email(session[:email]).id, request_id: params[:friend_id]
+    erb :friend_requests
+  elsif params[:action] == "accept"
+      # Create friend from friend request.
+      Friend.create user_id: params[:user_id], friend_id: params[:friend_id]
+      # Delete the friend request and any duplicate requests.
+      FriendRequest.where(request_id: params[:friend_id]).destroy_all
+      redirect 'friend_requests'
+    elsif params[:action] == "reject"
+      FriendRequest.find_by_request_id(params[:friend_id]).destroy
+      redirect 'friend_requests'
   end
-  # Creates friend request.
-  FriendRequest.create user_id: User.find_by_email(session[:email]).id, request_id: params[:friend_id]
-  erb :friend_requests
-end
-
-get '/accept_request' do
-  redirect 'friend_requests'
-end
-
-post '/accept_request' do
-  # Create friend from friend request.
-  Friend.create user_id: params[:user_id], friend_id: params[:friend_id]
-  # Delete the friend request and any duplicate requests.
-  FriendRequest.where(request_id: params[:friend_id]).destroy_all
-  redirect 'friend_requests'
-end
-
-post '/deny_request' do
-  FriendRequest.find_by_request_id(params[:friend_id]).destroy
-  redirect 'friend_requests'
 end
 
 

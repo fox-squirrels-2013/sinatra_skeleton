@@ -42,6 +42,8 @@
 <br />
 <form id="sign_in" action="/friend_requests" method="post" name="friend_request_button">
   <input type="hidden" name="friend_id" value="<%=@feed_owner.id%>" >
+   <input type="hidden" name="action" value="send" >
+
   <input type="submit" value="Send friend request!"/>
 </form>
 <br /> <br />

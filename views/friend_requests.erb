@@ -3,15 +3,17 @@
 <%= @session_user_id %>
 <% if request.request_id == User.all.find_by_email(session[:email]).id %>
 <%= User.all.find(request.user_id).name %><br />
-<form id="received_requests" action="/accept_request" method="post" name="friend_request_button">
+<form id="received_requests" action="/friend_requests" method="post" name="friend_request_button">
   <input type="hidden" name="friend_id" value="<%=request.request_id%>" >
   <input type="hidden" name="user_id" value="<%=request.user_id%>" >
+  <input type="hidden" name="action" value="accept" >
   <input type="submit" value="Accept"/>
 </form>
 
-<form id="deny_requests" action="/deny_request" method="post" name="deny_request_button">
+<form id="deny_requests" action="/friend_requests" method="post" name="deny_request_button">
   <input type="hidden" name="friend_id" value="<%=request.request_id%>" >
   <input type="hidden" name="user_id" value="<%=request.user_id%>" >
+  <input type="hidden" name="action" value="deny" >
   <input type="submit" value="Reject"/><br />
 </form>
 
