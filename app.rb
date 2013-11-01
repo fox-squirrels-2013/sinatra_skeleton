@@ -4,6 +4,7 @@ require 'sinatra/flash'
 require_relative './app/models/user'
 require_relative './app/models/post'
 require_relative './app/models/friend'
+require_relative './app/models/friend_request'
 
 ActiveRecord::Base.establish_connection(adapter: 'postgresql',
                                         database: 'social_network')
@@ -29,6 +30,27 @@ post '/' do
     session[:email] = params[:email]
     erb :sign_in
   end
+end
+
+get '/friend_requests' do
+  erb :friend_requests
+end
+
+post '/friend_requests' do
+  FriendRequest.create user_id: User.find_by_email(session[:email]).id, request_id: params[:friend_id]
+  erb :friend_requests
+end
+
+get '/accept_request' do
+  redirect 'friend_requests'
+end
+
+post '/accept_request' do
+  Friend.create user_id: params[:user_id], friend_id: params[:friend_id]
+ # FriendRequest.all.find_by_friend_id(params[:friend_id]).delete
+ # FriendRequest.where("request_id = ?", params[:friend_id]).delete
+  FriendRequest.where(request_id: params[:friend_id]).destroy_all
+  redirect 'friend_requests'
 end
 
 get '/sign_up' do

@@ -2,9 +2,12 @@
 <br/>
 <br/>
 
-<% if Friend.is_friend?(@feed_owner.id, User.all.find_by_email(session[:email]).id) %>
 
-  <%= "#{@feed_owner.email}" %> is friends with:
+
+
+<% if (Friend.is_friend?(@feed_owner.id, User.all.find_by_email(session[:email]).id)) || @feed_owner.id == User.all.find_by_email(session[:email]).id %> 
+
+  <%= "#{@feed_owner.name}" %> is friends with:
   <br /><br />
 
   <% Friend.all.each do |friend| %>
@@ -36,4 +39,10 @@
 <% else %>
 
 <p><h5>You cannot view this feed because you are not friends with this person.</h5></p>
+<br />
+<form id="sign_in" action="/friend_requests" method="post" name="friend_request_button">
+  <input type="hidden" name="friend_id" value="<%=@feed_owner.id%>" >
+  <input type="submit" value="Send friend request!"/>
+</form>
+<br /> <br />
 <% end %>
