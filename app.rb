@@ -74,8 +74,13 @@ end
 
 post '/sign_up' do
   crypt_digest = BCrypt::Password.create(params[:password])
-  User.create(:email => params[:email], :hex_digest => crypt_digest.to_s, :name => params[:name])
-  erb :confirm_new_user
+  new_user = User.new(:email => params[:email], :hex_digest => crypt_digest.to_s, :name => params[:name])
+  if new_user.valid? 
+    new_user.save
+    erb :confirm_new_user
+  else
+    erb :sign_up
+  end
 end
 
 # Logs out any sessions.
