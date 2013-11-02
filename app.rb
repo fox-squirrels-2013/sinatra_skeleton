@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'active_record'
 require 'sinatra/flash'
+require 'bcrypt'
 require_relative './app/models/user'
 require_relative './app/models/post'
 require_relative './app/models/friend'
@@ -18,6 +19,7 @@ helpers do
   alias_method :h, :escape_html
 end
 
+# Index displays login if no session.  Else the user is brought to their control panel.
 get '/' do
   if session[:email] != nil
     erb :user_cp
@@ -26,9 +28,10 @@ get '/' do
   end
 end
 
+# Validates user on login.
 post '/' do
   curr_user = User.find_by email: params[:email]
-  if !curr_user || curr_user.password != params[:password]
+  if !curr_user || BCrypt::Password.new(curr_user.hex_digest) != params[:password]
     erb :login_failed
   else
     session[:email] = params[:email]
@@ -36,10 +39,12 @@ post '/' do
   end
 end
 
+# Show friend requests. (DEPRECATED)
 get '/friend_requests' do
   erb :friend_requests
 end
 
+# Handles friend requests when a user sends, accepts, or rejects a requeset.
 post '/friend_requests' do
   # If user is sending a request...
   if params[:action] == "send" 
@@ -62,20 +67,23 @@ post '/friend_requests' do
   end
 end
 
-
+# Display signup page.
 get '/sign_up' do
   erb :sign_up
 end
 
 post '/sign_up' do
-  User.create(:email => params[:email], :password => params[:password], :name => params[:name])
+  crypt_digest = BCrypt::Password.create(params[:password])
+  User.create(:email => params[:email], :hex_digest => crypt_digest.to_s, :name => params[:name])
   erb :confirm_new_user
 end
 
+# Logs out any sessions.
 get '/logout' do 
   session.clear
   redirect '/'
 end
+
 
 get '/search' do
   erb :search
