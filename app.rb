@@ -23,7 +23,7 @@ get '/' do
     erb :user_cp
   else
   erb :index, :locals => { :session => session }
-end
+  end
 end
 
 post '/' do

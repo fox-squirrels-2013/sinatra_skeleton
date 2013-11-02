@@ -19,7 +19,7 @@
   <br />
 
   <% users_posts = [] %>
-  <% Post.find_each do |post| %>
+  <% Post.all.each do |post| %>
     <% if post.user_id == @feed_owner.id %>
       <% users_posts << post %>
     <% end %>
